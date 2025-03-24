@@ -11,7 +11,7 @@
         .month { background: #000; color: #fff; font-size: 1.5em; padding: 10px; position: relative; }
         .year { font-size: 12px; display: block; padding-top: 4px }
         .day-header { background: #f1f1f1; padding: 10px; }
-        td, th { text-align: center; padding: 10px; }
+        td, th { text-align: center; padding: 12px; 14px }
         td { border-bottom: 1px solid rgba(0,0,0,0.05); }
         td span { display: block; transition: 0.3s; }
         .today { font-weight: bold; background: #000; color: #fff; }
@@ -43,7 +43,12 @@
             table.appendChild(daysRow);
             
             let current = new Date(date.getFullYear(), date.getMonth(), 1);
-            current.setDate(current.getDate() - current.getDay());
+            
+            // Adjust to start the calendar on Monday (adjust current.getDay())
+            let startDay = current.getDay();
+            if (startDay === 0) startDay = 7;  // Adjust Sunday to 7 (representing Monday as the start of the week)
+            current.setDate(current.getDate() - startDay + 1);  // Move the starting day to the previous Monday
+            
             for (let i = 0; i < 6; i++) {
                 const row = document.createElement('tr');
                 for (let j = 0; j < 7; j++) {
