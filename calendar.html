@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <style>
+        body { font-family: monospace; text-align: center; }
+        #calendar { margin: 20px auto; font-size: 14px; }
+        table { border-collapse: collapse; background: #fff; border: 2px solid #000; border-radius: 2px; }
+        .month { background: #000; color: #fff; font-size: 1.5em; padding: 10px; position: relative; }
+        .year { font-size: 12px; display: block; padding-top: 4px }
+        .day-header { background: #f1f1f1; padding: 10px; }
+        td, th { text-align: center; padding: 10px; }
+        td { border-bottom: 1px solid rgba(0,0,0,0.05); }
+        td span { display: block; transition: 0.3s; }
+        .today { font-weight: bold; background: #000; color: #fff; }
+        .outside span { opacity: 0.2; }
+        .button { background: #000; color: #fff; border: none; font-size: 20px; padding: 5px; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); }
+        .button-prev { left: 10px; }
+        .button-next { right: 10px; }
+    </style>
+</head>
+<body>
+    <div id="calendar"></div>
+    <script>
+        const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        const days_abr = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+        
+        function createCalendar(widget, date) {
+            widget.innerHTML = '';
+            const table = document.createElement('table');
+            const headerRow = document.createElement('tr');
+            const title = document.createElement('th');
+            title.colSpan = 7;
+            title.className = 'month';
+            title.innerHTML = `<button class='button button-prev'>&#9666;</button>${months[date.getMonth()]} <span class='year'>${date.getFullYear()}</span><button class='button button-next'>&#9656;</button>`;
+            headerRow.appendChild(title);
+            table.appendChild(headerRow);
+            
+            const daysRow = document.createElement('tr');
+            days_abr.forEach(day => daysRow.innerHTML += `<th class='day-header'>${day}</th>`);
+            table.appendChild(daysRow);
+            
+            let current = new Date(date.getFullYear(), date.getMonth(), 1);
+            current.setDate(current.getDate() - current.getDay());
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('tr');
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement('td');
+                    cell.innerHTML = `<span>${current.getDate()}</span>`;
+                    if (current.getMonth() !== date.getMonth()) cell.classList.add('outside');
+                    if (current.toDateString() === new Date().toDateString()) cell.classList.add('today');
+                    row.appendChild(cell);
+                    current.setDate(current.getDate() + 1);
+                }
+                table.appendChild(row);
+            }
+            
+            widget.appendChild(table);
+            
+            document.querySelector('.button-prev').addEventListener('click', () => { date.setMonth(date.getMonth() - 1); createCalendar(widget, date); });
+            document.querySelector('.button-next').addEventListener('click', () => { date.setMonth(date.getMonth() + 1); createCalendar(widget, date); });
+        }
+        
+        createCalendar(document.getElementById('calendar'), new Date());
+    </script>
+</body>
+</html>
