@@ -1,2 +1,2 @@
-# notion-widgets
-Widgets to embed in your Notion
+# Notion widgets & templates
+Widgets and templates for your Notion
